@@ -43,7 +43,7 @@ export async function registerTenant(): Promise<void> {
   }
 
   const tenantName = "ozaytruck"; // Sabit tenant ismi
-  
+
   const response = await fetch(`${BASE_URL}/tenants`, {
     method: "POST",
     headers: {
@@ -90,3 +90,53 @@ export async function fetchMenu(type?: string) {
     throw new Error("Failed to fetch menu items");
   }
 }
+
+/**
+ * Siparişi gönderir ve yanıt olarak sipariş detaylarını alır
+ */
+export async function submitOrder(items: number[]) {
+  if (!apiKey || !tenantId) {
+    throw new Error("API key or tenant ID is not set");
+  }
+
+  const response = await fetch(`${BASE_URL}/${tenantId}/orders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-zocom": apiKey,
+    },
+    body: JSON.stringify({ items }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to submit order");
+  }
+
+  const data = await response.json();
+  console.log("Order result from API:", data); // Dönen veriyi kontrol ediyoruz
+  return data;
+}
+
+
+/**
+ * Kvitto icin orderid kullanarak makbuz detayini cekelim.
+ */
+
+export async function fetchReceipt(orderId: string) {
+  if (!apiKey) {
+    throw new Error("API key is not set");
+  }
+
+  const response = await fetch(`${BASE_URL}/receipts/${orderId}`, {
+    headers: {
+      "x-zocom": apiKey,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch receipt");
+  }
+
+  return await response.json();
+}
+

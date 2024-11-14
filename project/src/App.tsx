@@ -1,28 +1,25 @@
 // project/src/App.tsx
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Menu from './components/Menu';
-import { fetchApiKey, registerTenant } from './api';
+import Cart from './components/Cart';
+import OrderResult from './components/OrderResult';
+import Receipt from './components/Receipt';
+import { CartProvider } from './context/CartContext';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const App: React.FC = () => {
-  useEffect(() => {
-    const initializeApi = async () => {
-      try {
-        await fetchApiKey();
-        await registerTenant();
-        console.log("API key and tenant ID are set.");
-      } catch (err) {
-        console.error("Failed to initialize API key and tenant:", err);
-      }
-    };
-
-    initializeApi();
-  }, []);
-
   return (
-    <div>
-      <Menu />
-    </div>
+    <CartProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Menu />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/order-result" element={<OrderResult />} />
+          <Route path="/receipt/:orderId" element={<Receipt />} />
+        </Routes>
+      </Router>
+    </CartProvider>
   );
 };
 

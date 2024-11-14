@@ -57,3 +57,5 @@ export type Keystring = string;
 export interface OrderBody {
   items: number[]; // Array of item IDs
 }
+
+export type MenuItem = Wonton | Dip | Drink; // Bu birleşik türü ekliyoruz
