@@ -5,6 +5,7 @@ import { fetchMenu } from '../api';
 import { Wonton, Dip, Drink } from '../models/types';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import cartIcon from "../assets/cart.svg";
 
 type MenuItem = Wonton | Dip | Drink;
 
@@ -58,65 +59,86 @@ const Menu: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className='mainpage'>
+      
       {/* Sepet İkonu */}
-      <div className="cart-icon" onClick={() => navigate('/cart')}>
-        <span>🛒</span>
+      <div className='fixed right-0 top-0 h-[80px] max-h-[80px]'>
+        <div className="relative w-[75px] h-[75px] mt-[5px] mr-[5px] ml-auto hover:cursor-pointer" onClick={() => navigate('/cart')}>
+          <div className="flex items-center justify-center absolute bottom-0 w-[64px] h-[64px] rounded-[4px] bg-snow">
+					  <img height="32px" width="32px" src={cartIcon}></img>
+          </div>
+        </div>
         {cartItems.length > 0 && (
-          <span className="cart-count">{cartItems.length}</span>
+          <div className="absolute flex items-center justify-center top-[5px] right-[5px] w-[24px] h-[24px] rounded-full bg-alert">
+            <span className="font-bold text-[10px] text-snow">{cartItems.length}</span>
+          </div>
         )}
       </div>
 
-      <h1>Menu</h1>
+      
+      <div className='flex flex-col gap-4 px-4 text-snow'>
+        <h1 className="font-bold text-[32px] leading-[16px]">MENY</h1>
+        {/* Wonton (Ana Yemekler) Bölümü */}
+        <section className='bg-clay rounded-lg '>
+          <ul>
+            {wontonItems.map((item) => (
+              <li
+                  key={item.id}
+                  onClick={() => toggleSelectItem(item)}
+                  className={`flex flex-col w-full gap-2 p-4 border-b border-dotted border-shade-24-light first:rounded-t-lg last:rounded-b-lg last:border-none hover:cursor-pointer ${
+                    selectedItems.includes(item.id) ? 'bg-coal' : ''
+                  }`}
+              >
+                <div className='flex flex-row w-full font-bold text-[22px] leading-[26.4px] uppercase'>
+                  <h2 className='w-fit'>{item.name}</h2>
+                  <span className='flex-1 border-b-2 border-dotted mb-[6px] mx-2'></span>
+                  <span className='inline ml-auto w-fit'>{item.price} SEK</span>
+                </div>
+                <p className='font-medium text-[14px] leading-[16.8px]'>{item.ingredients.join(', ')}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-      {/* Wonton (Ana Yemekler) Bölümü */}
-      <section>
-        <h2>Wonton (Ana Yemekler)</h2>
-        <ul>
-          {wontonItems.map((item) => (
-            <li
-              key={item.id}
-              onClick={() => toggleSelectItem(item)}
-              className={selectedItems.includes(item.id) ? 'selected' : ''} 
-            >
-              <h3>{item.name} ....................... {item.price} SEK</h3>
-              <p>{item.ingredients.join(', ')}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
+        {/* Dip (Soslar) Bölümü */}
+        <section className='bg-clay rounded-lg p-4'>
+          <div className='flex flex-row w-full font-bold text-[22px] leading-[26.4px] uppercase'>
+            <h2>DIPSÅS</h2>
+            <span className='flex-1 border-b-2 border-dotted mb-[6px] mx-2'></span>
+            <span className='inline ml-auto w-fit'>19 SEK</span>
+          </div>
+          <div className="flex flex-wrap w-full gap-4 mt-6">
+            {dipItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => toggleSelectItem(item)}
+                // className={`item-header ${selectedItems.includes(item.id) ? 'selected' : ''}`}
+                className={`w-fit h-fit py-2 px-3 rounded-[4px] text-[14px] leading-[16.8px] hover:cursor-pointer ${selectedItems.includes(item.id) ? 'bg-coal' : 'bg-shade-24-light'}`}>
+                {item.name}
+              </button>
+            ))}
+          </div>
+        </section>
 
-      {/* Dip (Soslar) Bölümü */}
-      <section>
-        <h2>DIPSÅS ............ 19 SEK</h2>
-        <div className="dip-container">
-          {dipItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => toggleSelectItem(item)}
-              className={`item-header ${selectedItems.includes(item.id) ? 'selected' : ''}`}
-            >
-              {item.name}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* Drink (İçecekler) Bölümü */}
-      <section>
-        <h2>DRICKA ............ 19 SEK</h2>
-        <div className="drink-container">
-          {drinkItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => toggleSelectItem(item)}
-              className={`item-header ${selectedItems.includes(item.id) ? 'selected' : ''}`}
-            >
-              {item.name}
-            </button>
-          ))}
-        </div>
-      </section>
+        {/* Drink (İçecekler) Bölümü */}
+        <section className='bg-clay rounded-lg p-4'>
+          <div className='flex flex-row w-full font-bold text-[22px] leading-[26.4px] uppercase'>
+            <h2>Dricka</h2>
+            <span className='flex-1 border-b-2 border-dotted mb-[6px] mx-2'></span>
+            <span className='inline ml-auto w-fit'>19 SEK</span>
+          </div>
+          <div className="flex flex-wrap w-full gap-4 mt-6">
+            {drinkItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => toggleSelectItem(item)}
+                className={`w-fit h-fit py-2 px-3 rounded-[4px] text-[14px] leading-[16.8px] hover:cursor-pointer ${selectedItems.includes(item.id) ? 'bg-coal' : 'bg-shade-24-light'}`}>
+                {item.name}
+              </button>
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
   );
 };
