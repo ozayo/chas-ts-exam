@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchReceipt } from '../api';
-import { Receipt } from '../models/types'; // Mevcut Receipt modelini içe aktarıyoruz
+import { Receipt } from '../models/types'; // Receipt tipini import ediyoruz
 
 const ReceiptPage: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -15,9 +15,9 @@ const ReceiptPage: React.FC = () => {
       if (!orderId) return;
 
       try {
-        const receiptData = await fetchReceipt(orderId);
+        const receiptData: Receipt = await fetchReceipt(orderId);
         console.log("Received receipt data:", receiptData); // Alınan veriyi kontrol
-        setReceipt(receiptData.receipt); // Burada receipt içindeki veriyi kullanıyoruz
+        setReceipt(receiptData); // Doğrudan receipt nesnesini kullanıyoruz
       } catch (err) {
         console.error("Error fetching receipt:", err);
         setError("Failed to load receipt details.");

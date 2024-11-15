@@ -4,6 +4,7 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 import { submitOrder } from '../api';
 import { useNavigate } from 'react-router-dom';
+import { Order } from '../models/types'; // Order tipini import ediyoruz
 
 const Cart: React.FC = () => {
   const { cartItems, addToCart, removeFromCart } = useCart();
@@ -19,10 +20,7 @@ const Cart: React.FC = () => {
   const handleOrder = async () => {
     try {
       const itemIds = cartItems.map((item) => item.id);
-      const orderResponse = await submitOrder(itemIds);
-      
-      // orderResponse içindeki order nesnesini çekiyoruz
-      const orderResult = orderResponse.order;
+      const orderResult: Order = await submitOrder(itemIds);
 
       if (orderResult && orderResult.id && orderResult.orderValue && orderResult.eta && orderResult.timestamp) {
         navigate('/order-result', {
