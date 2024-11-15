@@ -1,9 +1,14 @@
+// src/api.ts
+
 import { Order, Receipt } from './models/types';
 
 const BASE_URL = "https://fdnzawlcf6.execute-api.eu-north-1.amazonaws.com";
 
 // API key'i bir kez alıp saklamak için bir değişken
 let apiKey: string | null = null;
+
+// Tenant ID'yi sabit bir değer olarak tanımlıyoruz
+const tenantId: string = "9ktp"; // Buraya gerçek tenant ID'nizi yazın name:ozayMytruck
 
 /**
  * Fetches API key only if it has not been set previously.
@@ -58,7 +63,7 @@ export async function submitOrder(items: number[]): Promise<Order> {
     throw new Error("API key is not set");
   }
 
-  const response = await fetch(`${BASE_URL}/ozaytruck/orders`, {
+  const response = await fetch(`${BASE_URL}/${tenantId}/orders`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -69,8 +74,8 @@ export async function submitOrder(items: number[]): Promise<Order> {
 
   if (response.ok) {
     const data = await response.json();
-    console.log('submitOrder response data:', data); // Gelen veriyi kontrol etmek için
-    return data.order; // Sadece order nesnesini döndürüyoruz
+    console.log('submitOrder response data:', data);
+    return data.order;
   } else {
     throw new Error("Failed to submit order");
   }
@@ -92,8 +97,8 @@ export async function fetchReceipt(orderId: string): Promise<Receipt> {
 
   if (response.ok) {
     const data = await response.json();
-    console.log('fetchReceipt response data:', data); // Gelen veriyi kontrol etmek için
-    return data.receipt; // Sadece receipt nesnesini döndürüyoruz
+    console.log('fetchReceipt response data:', data);
+    return data.receipt;
   } else {
     throw new Error("Failed to fetch receipt");
   }
@@ -115,8 +120,8 @@ export async function fetchOrder(orderId: string): Promise<Order> {
 
   if (response.ok) {
     const data = await response.json();
-    console.log('fetchOrder response data:', data); // Gelen veriyi kontrol etmek için
-    return data.order; // Sadece order nesnesini döndürüyoruz
+    console.log('fetchOrder response data:', data);
+    return data.order;
   } else {
     throw new Error("Failed to fetch order");
   }
